@@ -13,6 +13,7 @@ import { acpStructuredAgentDefinition } from '../acp/acp-structured-agent-defini
 import { createAcpAgentConnection } from '../acp/acp-agent-connection'
 import { acpStructuredLaunchPart } from '../acp/acp-structured-launch-resolution'
 import { AcpStructuredSessionAdapter } from '../acp/acp-structured-session-adapter'
+import { supportsAcpStructuredLocation } from '../acp/acp-structured-location-support'
 import { PI_RPC_RUNTIME_REGISTRATION } from '../pi/rpc-runtime-registration'
 import { claudeLaunchEnvOverlay } from './structured-agent-model-catalog-discovery'
 import {
