@@ -66,7 +66,7 @@ export class ManagedRuntimeInstallation {
     await this.state.waitForChange(shown, STATUS_WAIT_MS, signal)
     const { value: operation, revision } = this.state.get()
     const pin = this.runtime.pin()
-    const { release, broken } = resolveInstalledRuntimeRelease(this.root, pin)
+    const { release, broken, unreadable } = resolveInstalledRuntimeRelease(this.root, pin)
     const source = (await this.deps.findExternal()) ? 'external' : release ? 'managed' : null
     const missingProgram = pin && missingArchiveExtractor(pin.url)
     return {
@@ -79,6 +79,8 @@ export class ManagedRuntimeInstallation {
       installedVersion: release?.version ?? null,
       installedCurrent: release?.current ?? false,
       ...(pin && !release?.current && broken.includes(pin.version) && { damaged: true }),
+      // A damaged copy is removable too, though no launch runs it.
+      canRemove: release !== null || broken.length > 0 || unreadable,
       source,
       operation
     }
