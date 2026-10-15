@@ -31,19 +31,6 @@ function hermesCommand(action: ExternalAutomationAction): string {
   }
 }
 
-function openClawCommand(action: ExternalAutomationAction): string {
-  switch (action) {
-    case 'pause':
-      return 'disable'
-    case 'resume':
-      return 'enable'
-    case 'run':
-      return 'run'
-    case 'delete':
-      return 'rm'
-  }
-}
-
 function normalizeHermesJobMutation(params: Record<string, unknown>): HermesJobMutation {
   const provider = externalAutomationProvider(params.provider)
   if (provider !== 'hermes') {
@@ -128,7 +115,7 @@ export class ExternalAutomationCommandExecutor {
     if (typeof jobId !== 'string' || !EXTERNAL_AUTOMATION_JOB_ID_PATTERN.test(jobId)) {
       throw new Error('Invalid external automation job ID.')
     }
-    const command = provider === 'hermes' ? hermesCommand(action) : openClawCommand(action)
+    const command = hermesCommand(action)
     await this.runCommand(provider, ['cron', command, jobId], {
       encoding: 'utf-8',
       timeout: 30_000

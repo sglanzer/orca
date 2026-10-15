@@ -35,7 +35,6 @@ export const AI_VAULT_DELETABLE_AGENTS = [
   'cursor',
   'hermes',
   'devin',
-  'openclaw',
   'droid',
   'pi',
   'omp',

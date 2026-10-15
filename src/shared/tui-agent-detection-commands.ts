@@ -18,11 +18,13 @@ export type TuiAgentDetectionCommand = {
 export const KNOWN_TUI_AGENT_DETECTION_COMMANDS = buildTuiAgentDetectionCommands()
 
 function buildTuiAgentDetectionCommands(): TuiAgentDetectionCommand[] {
-  return Object.entries(TUI_AGENT_CONFIG).flatMap(([id, config]) =>
-    getTuiAgentDetectCommands(config).map((cmd) =>
-      buildTuiAgentDetectionCommand(id as TuiAgent, cmd, config)
+  return Object.entries(TUI_AGENT_CONFIG)
+    .filter(([id]) => id !== 'openclaw')
+    .flatMap(([id, config]) =>
+      getTuiAgentDetectCommands(config).map((cmd) =>
+        buildTuiAgentDetectionCommand(id as TuiAgent, cmd, config)
+      )
     )
-  )
 }
 
 function buildTuiAgentDetectionCommand(

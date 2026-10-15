@@ -11,6 +11,13 @@ function devinRootDirs(relayPlatform: RelayPlatform, remoteHome: string): string
 }
 
 describe('remoteSessionSources devin transcripts root', () => {
+  it.each(['linux-x64', 'darwin-arm64', 'win32-x64'] as const)(
+    'does not discover OpenClaw on %s',
+    (platform) => {
+      const sources = remoteSessionSources('/home/dev', getRemoteHostPlatform(platform))
+      expect(sources.some((source) => source.agent === 'openclaw')).toBe(false)
+    }
+  )
   it.each([
     {
       relayPlatform: 'win32-x64' as const,

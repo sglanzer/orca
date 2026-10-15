@@ -122,7 +122,9 @@ describe('scoped external automations', () => {
     const engine = buildEngine([sshTarget(), sshTarget({ id: 'target-b', generation: 1 })])
 
     await engine.listManager({ owner: desktopSelf, provider: 'hermes' })
-    await engine.listManager({ owner: desktopSelf, provider: 'openclaw' })
+    await expect(engine.listManager({ owner: desktopSelf, provider: 'openclaw' })).rejects.toThrow(
+      'external_automation_provider_not_allowed'
+    )
 
     expect(getActiveMultiplexer).not.toHaveBeenCalled()
   })

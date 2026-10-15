@@ -22,7 +22,6 @@ import { partitionSubagentTranscriptPaths } from './session-scanner-subagent-tra
 import { partitionOmpSubagentTranscriptPaths } from './session-scanner-omp-subagent-transcripts'
 import {
   ompParser,
-  openClawParser,
   parseMuseRemoteContent,
   piParser,
   primeAgentParser,
@@ -178,8 +177,7 @@ export function remoteSessionSources(
       hostPlatform,
       ['.factory', 'projects'],
       parseDroidSessionContent
-    ),
-    ...remoteOpenClawSources(remoteHome, hostPlatform)
+    )
   ]
 }
 
@@ -255,22 +253,6 @@ function jsonlSource(
         parseContent(file, lines, context.hostPlatform.os, parserOptions(context), context.signal)
       )
   }
-}
-
-function remoteOpenClawSources(
-  remoteHome: string,
-  hostPlatform: RemoteHostPlatform
-): RemoteSessionSource[] {
-  return ['.openclaw', '.clawdbot'].map((rootName) =>
-    jsonlSource(
-      'openclaw',
-      remoteHome,
-      hostPlatform,
-      [rootName, 'agents'],
-      openClawParser,
-      (path) => remotePathSegments(path).includes('sessions')
-    )
-  )
 }
 
 function parserOptions(context: RemoteScannerContext): RemoteParserOptions {

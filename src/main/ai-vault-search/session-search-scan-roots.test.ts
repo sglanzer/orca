@@ -2,6 +2,9 @@ import { expect, it } from 'vitest'
 import { delimiter, join } from 'node:path'
 import type { SessionFileDiscovery } from '../ai-vault/session-scanner-types'
 import { sameSessionSearchRoots, sessionSearchRootListings } from './session-search-scan-roots'
+import { installMergedSessionSourceFixture } from './session-search-merged-source-fixture'
+
+installMergedSessionSourceFixture()
 
 const STATE = '/tmp/ss-roots/openclaw-state'
 const LEGACY = '/tmp/ss-roots/openclaw-legacy'

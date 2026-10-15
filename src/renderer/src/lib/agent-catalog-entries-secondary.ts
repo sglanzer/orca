@@ -165,13 +165,6 @@ export function secondaryAgentCatalogEntries(): AgentCatalogEntry[] {
       homepageUrl: 'https://devin.ai/cli'
     },
     {
-      id: 'openclaw',
-      label: translate('auto.lib.agent.catalog.5dff448636', 'OpenClaw'),
-      cmd: 'openclaw',
-      faviconDomain: 'openclaw.ai',
-      homepageUrl: 'https://github.com/openclaw/openclaw'
-    },
-    {
       id: 'codebuddy',
       label: translate('auto.lib.agent.catalog.codebuddy_label', 'CodeBuddy'),
       cmd: 'codebuddy',

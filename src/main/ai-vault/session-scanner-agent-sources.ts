@@ -38,10 +38,6 @@ const CURSOR_PROJECTS_DIR = join(homedir(), '.cursor', 'projects')
 const CODEBUDDY_PROJECTS_DIR = join(homedir(), '.codebuddy', 'projects')
 const HERMES_SESSIONS_DIR = join(homedir(), '.hermes', 'sessions')
 const ROVO_SESSIONS_DIR = join(homedir(), '.rovodev', 'sessions')
-const OPENCLAW_STATE_DIR = resolveAbsoluteDirOverride(
-  process.env.OPENCLAW_STATE_DIR,
-  join(homedir(), '.openclaw')
-)
 const PI_SESSIONS_DIR = normalizeAgentSessionsDir(
   process.env.PI_CODING_AGENT_DIR?.trim() || join(homedir(), '.pi', 'agent', 'sessions'),
   '.pi'
@@ -269,19 +265,9 @@ export const AI_VAULT_AGENT_SOURCES: AiVaultAgentSourceTable = {
     extensions: ['.jsonl']
   },
   openclaw: {
-    // Sessions live under <stateDir>/agents; a stateDir already ending in
-    // `agents` is used as-is. The current and legacy state dirs are the same
-    // install, so their discoveries merge.
-    rootDirs: (options, wslHomeDirs) =>
-      [
-        options.openclawStateDir ?? OPENCLAW_STATE_DIR,
-        options.openclawLegacyStateDir ?? join(homedir(), '.clawdbot'),
-        ...wslHomeDirs.map((homeDir) => join(homeDir, '.openclaw')),
-        ...wslHomeDirs.map((homeDir) => join(homeDir, '.clawdbot'))
-      ].map((stateDir) => (basename(stateDir) === 'agents' ? stateDir : join(stateDir, 'agents'))),
-    extensions: ['.jsonl'],
-    filePredicate: (filePath) => pathSegments(filePath).includes('sessions'),
-    mergeRootDiscoveries: true
+    // Retain persisted agent identities without accessing the removed integration's files.
+    rootDirs: () => [],
+    extensions: []
   },
   droid: {
     rootDirs: (options, wslHomeDirs) => [

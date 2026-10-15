@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
-import { HERMES_JOBS_FILE, OPENCLAW_JOBS_FILE } from './external-automation-storage-paths'
+import { HERMES_JOBS_FILE } from './external-automation-storage-paths'
 import {
   externalAutomationProvider,
   type ExternalAutomationProvider
@@ -57,7 +57,10 @@ export class ExternalAutomationProviderCatalog {
   }
 
   private async readJobs(provider: ExternalAutomationProvider): Promise<unknown[]> {
-    const jobsFile = provider === 'hermes' ? HERMES_JOBS_FILE : OPENCLAW_JOBS_FILE
+    if (provider !== 'hermes') {
+      throw new Error('OpenClaw integration is not included in this build.')
+    }
+    const jobsFile = HERMES_JOBS_FILE
     if (!existsSync(jobsFile)) {
       return []
     }

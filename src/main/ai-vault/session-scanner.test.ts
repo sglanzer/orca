@@ -412,7 +412,7 @@ describe('scanAiVaultSessions', () => {
 
     expect(result.issues).toEqual([])
     expect(new Set(result.sessions.map((session) => session.agent))).toEqual(
-      new Set(AI_VAULT_AGENTS)
+      new Set(AI_VAULT_AGENTS.filter((agent) => agent !== 'openclaw'))
     )
     const commandByAgent = new Map(
       result.sessions.map((session) => [session.agent, session.resumeCommand])
@@ -443,9 +443,7 @@ describe('scanAiVaultSessions', () => {
     expect(commandByAgent.get('rovo')).toBe(
       "cd '/tmp/rovo' && acli rovodev run --restore 'rovo-session'"
     )
-    expect(commandByAgent.get('openclaw')).toBe(
-      "cd '/tmp/openclaw' && openclaw --resume 'openclaw-session'"
-    )
+    expect(commandByAgent.has('openclaw')).toBe(false)
     expect(commandByAgent.get('pi')).toBe("cd '/tmp/pi' && pi --session 'pi-session'")
     // OMP resumes by absolute transcript path, not by internal session id.
     expect(commandByAgent.get('omp')).toBe(`cd '/tmp/omp' && omp --resume '${ompSessionFile}'`)

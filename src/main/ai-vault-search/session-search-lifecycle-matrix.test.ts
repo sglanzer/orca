@@ -5,6 +5,7 @@ import { resetSessionParseCacheForTests } from '../ai-vault/session-scanner-pars
 import { resetTranscriptConsumersForTests } from '../ai-vault/session-transcript-consumers'
 import type SyncDatabase from '../sqlite/sync-database'
 import { SessionSearchIndexer } from './session-search-indexer'
+import { installMergedSessionSourceFixture } from './session-search-merged-source-fixture'
 import type { SessionSearchIndexerOptions } from './session-search-indexer-options'
 import { removeSessionSearchDatabase } from './session-search-schema'
 import {
@@ -42,6 +43,8 @@ import {
  * place is a root whose transcripts sit behind an unreadable subdirectory,
  * which is the partial-tree case the old shape never covered.
  */
+
+installMergedSessionSourceFixture()
 
 const CAN_DENY_READ = process.platform !== 'win32' && process.getuid?.() !== 0
 const INTERVAL_MS = 20_000

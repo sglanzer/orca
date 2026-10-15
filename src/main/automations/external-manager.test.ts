@@ -332,20 +332,17 @@ describe('runExternalAutomationAction', () => {
     expect(runProcessMock).not.toHaveBeenCalled()
   })
 
-  it('maps OpenClaw lifecycle actions through its cron CLI names', async () => {
-    await runExternalAutomationAction({
-      managerId: 'openclaw:local',
-      provider: 'openclaw',
-      target: { type: 'local' },
-      jobId: 'job-1',
-      action: 'pause'
-    })
-
-    expect(runProcessMock).toHaveBeenCalledWith({
-      program: 'openclaw',
-      args: ['cron', 'disable', 'job-1'],
-      timeoutMs: 30_000
-    })
+  it('rejects OpenClaw lifecycle actions without launching a command', async () => {
+    await expect(
+      runExternalAutomationAction({
+        managerId: 'openclaw:local',
+        provider: 'openclaw',
+        target: { type: 'local' },
+        jobId: 'job-1',
+        action: 'pause'
+      })
+    ).rejects.toThrow('OpenClaw integration is not included')
+    expect(runProcessMock).not.toHaveBeenCalled()
   })
 })
 

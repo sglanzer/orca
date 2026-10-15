@@ -3,7 +3,7 @@ import { isTuiAgent } from './tui-agent-config'
 
 // Keep this order in sync with the desktop agent catalog. It defines the
 // automatic fallback priority when the user has not chosen a default agent.
-export const TUI_AGENT_AUTO_PICK_ORDER = [
+export const TUI_AGENT_AUTO_PICK_ORDER: readonly TuiAgent[] = [
   'claude',
   'claude-agent-teams',
   'openclaude',
@@ -46,7 +46,6 @@ export const TUI_AGENT_AUTO_PICK_ORDER = [
   'rovo',
   'hermes',
   'devin',
-  'openclaw',
   'codebuddy',
   'jcode'
 ] as const satisfies readonly TuiAgent[]
@@ -65,7 +64,7 @@ export function pickTuiAgent(
   }
   const disabledSet = new Set(normalizeDisabledTuiAgents(disabled))
   const detectedSet = detected instanceof Set ? detected : new Set(detected)
-  if (preferred && detectedSet.has(preferred) && !disabledSet.has(preferred)) {
+  if (preferred && isTuiAgentEnabled(preferred, disabled) && detectedSet.has(preferred)) {
     return preferred
   }
   for (const agent of TUI_AGENT_AUTO_PICK_ORDER) {
@@ -96,7 +95,7 @@ export function haveSameDisabledTuiAgents(left: unknown, right: unknown): boolea
 }
 
 export function isTuiAgentEnabled(agent: TuiAgent, disabled?: Iterable<unknown> | null): boolean {
-  return !normalizeDisabledTuiAgents(disabled).includes(agent)
+  return agent !== 'openclaw' && !normalizeDisabledTuiAgents(disabled).includes(agent)
 }
 
 export function filterEnabledTuiAgents<T extends TuiAgent>(
@@ -104,5 +103,5 @@ export function filterEnabledTuiAgents<T extends TuiAgent>(
   disabled?: Iterable<unknown> | null
 ): T[] {
   const disabledSet = new Set(normalizeDisabledTuiAgents(disabled))
-  return [...agents].filter((agent) => !disabledSet.has(agent))
+  return [...agents].filter((agent) => agent !== 'openclaw' && !disabledSet.has(agent))
 }

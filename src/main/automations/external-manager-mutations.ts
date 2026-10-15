@@ -23,6 +23,9 @@ function providerActionCommand(
   provider: ExternalAutomationProvider,
   action: ExternalAutomationAction
 ): string {
+  if (provider === 'openclaw') {
+    throw new Error('OpenClaw integration is not included in this build.')
+  }
   const commands = Object.hasOwn(PROVIDER_ACTION_COMMANDS, provider)
     ? PROVIDER_ACTION_COMMANDS[provider]
     : null

@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { AiVaultScanOptions } from './session-scanner-types'
 
 /**
- * The six env-derived scan roots must ignore a non-absolute value (#13082).
+ * The supported env-derived scan roots must ignore a non-absolute value (#13082).
  *
  * These assert at the *call sites*, not on the shared helper: four of the roots are module-level
  * consts evaluated at import time, so a helper that exists but is no longer wired into one of them
@@ -72,13 +72,6 @@ const CASES = [
       )
   },
   {
-    agent: 'openclaw',
-    envVar: 'OPENCLAW_STATE_DIR',
-    absolute: '/srv/openclaw',
-    absoluteRoot: join('/srv/openclaw', 'agents'),
-    defaultRoot: () => join(homedir(), '.openclaw', 'agents')
-  },
-  {
     agent: 'kimi',
     envVar: 'KIMI_CODE_HOME',
     absolute: '/srv/kimi',
@@ -98,6 +91,17 @@ describe('agent scan roots from environment overrides', () => {
   afterEach(() => {
     vi.unstubAllEnvs()
     vi.resetModules()
+  })
+
+  it('does not discover OpenClaw from the environment, explicit roots, or WSL homes', async () => {
+    expect(await rootDirsFor('openclaw', { OPENCLAW_STATE_DIR: '/srv/openclaw' })).toEqual([])
+    const { AI_VAULT_AGENT_SOURCES } = await import('./session-scanner-agent-sources')
+    expect(
+      AI_VAULT_AGENT_SOURCES.openclaw?.rootDirs(
+        { openclawStateDir: '/explicit/current', openclawLegacyStateDir: '/explicit/legacy' },
+        ['/wsl/home/dev']
+      )
+    ).toEqual([])
   })
 
   it('finds Devin transcripts in a relocated platform data directory', async () => {

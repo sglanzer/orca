@@ -56,7 +56,6 @@ describe('buildAiVaultServiceEnv', () => {
       GROK_HOME: '/home/dev/.grok',
       KIMI_CODE_HOME: '/home/dev/.kimi-code',
       OMP_CODING_AGENT_DIR: '/home/dev/.omp/agent/sessions',
-      OPENCLAW_STATE_DIR: '/home/dev/.openclaw',
       PI_CODING_AGENT_DIR: '/home/dev/.pi/agent/sessions',
       PRIME_AGENT_CODING_AGENT_DIR: '/home/dev/.prime/agent',
       PRIME_AGENT_CODING_AGENT_SESSION_DIR: '/home/dev/.prime/legacy-sessions',
@@ -73,6 +72,12 @@ describe('buildAiVaultServiceEnv', () => {
 
     expect(env.XDG_DATA_HOME).toBe('/home/dev/data')
     expect(env.OPENCODE_DB).toBe('opencode-alt.db')
+  })
+
+  it('does not forward the removed OpenClaw integration environment', () => {
+    const baseEnv = { OPENCLAW_STATE_DIR: '/home/dev/.openclaw' }
+    expect(buildAiVaultServiceEnv(baseEnv).OPENCLAW_STATE_DIR).toBeUndefined()
+    expect(buildRelayAiVaultServiceEnv(baseEnv).OPENCLAW_STATE_DIR).toBeUndefined()
   })
 
   it('runs the forked Electron binary as plain Node', () => {

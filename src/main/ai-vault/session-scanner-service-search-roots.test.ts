@@ -6,11 +6,14 @@ import {
   type SessionSearchIndexerHarness
 } from '../ai-vault-search/session-search-indexer-test-fixture'
 import { SessionSearchIndexer } from '../ai-vault-search/session-search-indexer'
+import { installMergedSessionSourceFixture } from '../ai-vault-search/session-search-merged-source-fixture'
 import type { SessionSearchScanRoots } from '../ai-vault-search/session-search-scan-roots'
 import { resetSessionParseCacheForTests } from './session-scanner-parse-cache'
 import type { AiVaultSessionSearchInit } from './session-scanner-service-protocol'
 import { SessionScannerServiceSearch } from './session-scanner-service-search'
 import { resetTranscriptConsumersForTests } from './session-transcript-consumers'
+
+installMergedSessionSourceFixture()
 
 let harness: SessionSearchIndexerHarness
 let subject: SessionScannerServiceSearch

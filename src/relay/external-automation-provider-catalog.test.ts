@@ -46,6 +46,19 @@ describe('ExternalAutomationProviderCatalog', () => {
     })
   })
 
+  it('rejects OpenClaw without probing a command or reading jobs', async () => {
+    const { ExternalAutomationProviderCatalog } =
+      await import('./external-automation-provider-catalog')
+    const runCommand = vi.fn()
+    const listRuns = vi.fn()
+    const catalog = new ExternalAutomationProviderCatalog(runCommand, listRuns)
+    await expect(catalog.listJobs({ provider: 'openclaw' })).rejects.toThrow(
+      'OpenClaw integration is not included'
+    )
+    expect(runCommand).not.toHaveBeenCalled()
+    expect(listRuns).not.toHaveBeenCalled()
+  })
+
   it('projects jobs-file parse failures without hiding command availability', async () => {
     await writeFile(join(hermesHome, 'cron', 'jobs.json'), '{not-json', 'utf-8')
     const { ExternalAutomationProviderCatalog } =

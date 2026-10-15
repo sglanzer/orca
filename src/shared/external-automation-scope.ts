@@ -23,8 +23,7 @@ import type {
 } from './automations-types'
 
 export const EXTERNAL_AUTOMATION_PROVIDERS = [
-  'hermes',
-  'openclaw'
+  'hermes'
 ] as const satisfies readonly ExternalAutomationProvider[]
 
 export function isExternalAutomationProvider(value: unknown): value is ExternalAutomationProvider {

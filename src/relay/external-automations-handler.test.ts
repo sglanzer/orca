@@ -83,11 +83,7 @@ describe('ExternalAutomationCommandExecutor', () => {
     ['hermes', 'pause', 'pause'],
     ['hermes', 'resume', 'resume'],
     ['hermes', 'run', 'run'],
-    ['hermes', 'delete', 'remove'],
-    ['openclaw', 'pause', 'disable'],
-    ['openclaw', 'resume', 'enable'],
-    ['openclaw', 'run', 'run'],
-    ['openclaw', 'delete', 'rm']
+    ['hermes', 'delete', 'remove']
   ])('maps %s %s to its provider command', async (provider, action, command) => {
     const runCommand = vi.fn().mockResolvedValue(undefined)
     const executor = new ExternalAutomationCommandExecutor(runCommand, vi.fn())
@@ -99,6 +95,18 @@ describe('ExternalAutomationCommandExecutor', () => {
       timeout: 30_000
     })
   })
+
+  it.each(['pause', 'resume', 'run', 'delete'])(
+    'rejects OpenClaw %s without executing a command',
+    async (action) => {
+      const runCommand = vi.fn()
+      const executor = new ExternalAutomationCommandExecutor(runCommand, vi.fn())
+      await expect(
+        executor.runAction({ provider: 'openclaw', action, jobId: 'job-1' })
+      ).rejects.toThrow('OpenClaw integration is not included')
+      expect(runCommand).not.toHaveBeenCalled()
+    }
+  )
 
   it('does not clear count state when a command fails', async () => {
     const commandError = new Error('command failed')

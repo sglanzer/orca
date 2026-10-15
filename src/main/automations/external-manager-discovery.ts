@@ -8,7 +8,7 @@ import type {
 } from '../../shared/automations-types'
 import type { SshTarget } from '../../shared/ssh-types'
 import { getActiveMultiplexer } from '../ssh/ssh-target-registry'
-import { mapHermesJobs, mapOpenClawJobs } from './external-job-mappers'
+import { mapHermesJobs } from './external-job-mappers'
 import { readHermesCronOutputRunsPage } from './hermes-cron-output'
 import { isExternalAutomationCommandOnPath } from './external-manager-local-command'
 import { externalAutomationRelayErrorMessage } from './external-manager-relay'
@@ -16,7 +16,6 @@ import { externalAutomationRelayErrorMessage } from './external-manager-relay'
 const HERMES_HOME = process.env.HERMES_HOME?.trim() || join(homedir(), '.hermes')
 const HERMES_CRON_DIR = join(HERMES_HOME, 'cron')
 const HERMES_JOBS_FILE = join(HERMES_CRON_DIR, 'jobs.json')
-const OPENCLAW_JOBS_FILE = join(homedir(), '.openclaw', 'cron', 'jobs.json')
 const PROVIDER_LABELS: Record<ExternalAutomationProvider, string> = {
   hermes: 'Hermes',
   openclaw: 'OpenClaw'
@@ -56,29 +55,23 @@ async function readLocalHermesJobs(): Promise<unknown[]> {
   )
 }
 
-async function readLocalOpenClawJobs(): Promise<unknown[]> {
-  if (!existsSync(OPENCLAW_JOBS_FILE)) {
-    return []
-  }
-  const content = await readFile(OPENCLAW_JOBS_FILE, 'utf-8')
-  const parsed = JSON.parse(content) as unknown
-  return isRecord(parsed) && Array.isArray(parsed.jobs) ? parsed.jobs : []
-}
-
 function mapProviderJobs(
   provider: ExternalAutomationProvider,
   managerId: string,
   jobs: unknown[]
 ): ExternalAutomationManager['jobs'] {
-  return provider === 'hermes' ? mapHermesJobs(managerId, jobs) : mapOpenClawJobs(managerId, jobs)
+  return provider === 'hermes' ? mapHermesJobs(managerId, jobs) : []
 }
 
 export async function listLocalManager(
   provider: ExternalAutomationProvider
 ): Promise<ExternalAutomationManager | null> {
+  if (provider !== 'hermes') {
+    return null
+  }
   const [availableResult, jobsResult] = await Promise.allSettled([
     isExternalAutomationCommandOnPath(provider),
-    provider === 'hermes' ? readLocalHermesJobs() : readLocalOpenClawJobs()
+    readLocalHermesJobs()
   ])
   const available = availableResult.status === 'fulfilled' && availableResult.value
   const jobs = jobsResult.status === 'fulfilled' ? jobsResult.value : []
@@ -109,6 +102,9 @@ export async function listRemoteManager(
   target: SshTarget,
   provider: ExternalAutomationProvider
 ): Promise<ExternalAutomationManager> {
+  if (provider !== 'hermes') {
+    throw new Error('OpenClaw integration is not included in this build.')
+  }
   const providerLabel = PROVIDER_LABELS[provider]
   const managerProviderId = `${provider}:ssh:${target.id}`
   const mux = getActiveMultiplexer(target.id)

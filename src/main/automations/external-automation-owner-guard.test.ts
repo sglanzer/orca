@@ -50,13 +50,13 @@ describe('resolveExternalAutomationScope', () => {
     const target = sshTarget()
 
     const scope = resolveExternalAutomationScope(
-      { owner: desktopSsh('target-a', 3), provider: 'openclaw' },
+      { owner: desktopSsh('target-a', 3), provider: 'hermes' },
       registry([target])
     )
 
     expect(scope.target).toEqual({ type: 'ssh', connectionId: 'target-a' })
     expect(scope.sshTarget).toBe(target)
-    expect(scope.managerId).toBe('openclaw:ssh:target-a')
+    expect(scope.managerId).toBe('hermes:ssh:target-a')
   })
 
   it('excludes a runtime-owned target instead of exposing it', () => {

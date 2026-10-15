@@ -361,7 +361,7 @@ export const TUI_AGENT_CONFIG: Record<TuiAgent, TuiAgentConfig> = Object.fromEnt
 ) as Record<TuiAgent, TuiAgentConfig>
 
 export function isTuiAgent(value: unknown): value is TuiAgent {
-  return typeof value === 'string' && Object.hasOwn(TUI_AGENT_CONFIG, value)
+  return typeof value === 'string' && value !== 'openclaw' && Object.hasOwn(TUI_AGENT_CONFIG, value)
 }
 
 export function getTuiAgentDetectCommands(config: TuiAgentConfig): string[] {

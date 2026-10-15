@@ -5,6 +5,7 @@ import { resetSessionParseCacheForTests } from '../ai-vault/session-scanner-pars
 import { resetTranscriptConsumersForTests } from '../ai-vault/session-transcript-consumers'
 import type SyncDatabase from '../sqlite/sync-database'
 import { SessionSearchIndexer } from './session-search-indexer'
+import { installMergedSessionSourceFixture } from './session-search-merged-source-fixture'
 import {
   FakeSessionSearchClock,
   openSessionSearchIndexerHarness,
@@ -12,7 +13,9 @@ import {
   type SessionSearchIndexerHarness
 } from './session-search-indexer-test-fixture'
 
-// OpenClaw is the one agent whose roots are alternates for a single install, so
+installMergedSessionSourceFixture()
+
+// The fixture supplies roots that are alternates for a single install, so
 // discovery reports them as ONE discovery whose rootDir is every path joined by
 // the platform's path delimiter. That string is not a directory: readdir on it
 // answers ENOENT, containment never matches a real file, and a scan issue

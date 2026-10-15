@@ -142,7 +142,9 @@ it('publishes at least one user or assistant message for every source it reads',
   expect(reads.filter((read) => !spokeIn(read)).map((read) => read.path)).toEqual([])
   // And the vault really does cover every agent, so a new one cannot be added
   // without a fixture that proves it publishes.
-  expect(new Set(reads.map((read) => read.agent))).toEqual(new Set(AI_VAULT_AGENTS))
+  expect(new Set(reads.map((read) => read.agent))).toEqual(
+    new Set(AI_VAULT_AGENTS.filter((agent) => agent !== 'openclaw'))
+  )
 })
 
 it('publishes an OpenCode SQLite session through the same channel as every file source', async () => {
