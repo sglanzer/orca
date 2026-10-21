@@ -3,6 +3,23 @@ import { homedir } from 'node:os'
 import { access } from 'node:fs/promises'
 import { queryDatabase, walkFiles } from './without-openclaw-recovery-files.mjs'
 
+export function defaultForkProfile(
+  env = process.env,
+  home = homedir(),
+  platform = process.platform
+) {
+  if (env.ORCA_DEV_USER_DATA_PATH) {
+    return path.resolve(env.ORCA_DEV_USER_DATA_PATH)
+  }
+  const appData =
+    platform === 'darwin'
+      ? path.join(home, 'Library', 'Application Support')
+      : platform === 'win32'
+        ? env.APPDATA || path.join(home, 'AppData', 'Roaming')
+        : env.XDG_CONFIG_HOME || path.join(home, '.config')
+  return path.join(appData, 'orca-without-openclaw')
+}
+
 export function defaultRecoveryRoot(profile) {
   const name = path.basename(profile)
   return path.join(homedir(), 'Documents', 'Codex', 'Orca Recovery', name)

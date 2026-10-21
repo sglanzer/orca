@@ -149,18 +149,31 @@ export async function snapshotDatabase(source, target) {
   }
 }
 
-export async function snapshotFile(source, target, previous) {
+export async function snapshotFile(source, target, previous, linkFile = link) {
   await mkdir(path.dirname(target), { recursive: true, mode: 0o700 })
   if (source.endsWith('.db') || source.endsWith('.sqlite')) {
     await snapshotDatabase(source, target)
   } else {
     const digest = await fileDigest(source)
+    let linked = false
     if (
       previous?.sha256 === digest &&
       (await fileDigest(previous.file).catch(() => null)) === digest
     ) {
-      await link(previous.file, target)
-    } else {
+      try {
+        await linkFile(previous.file, target)
+        linked = true
+      } catch (error) {
+        if (
+          !['EPERM', 'EACCES', 'EXDEV', 'ENOTSUP', 'EOPNOTSUPP', 'EMLINK', 'ENOSYS'].includes(
+            error.code
+          )
+        ) {
+          throw error
+        }
+      }
+    }
+    if (!linked) {
       await copyFile(source, target)
       await chmod(target, 0o600)
       if ((await fileDigest(target)) !== digest) {
