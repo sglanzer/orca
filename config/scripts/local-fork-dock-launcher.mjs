@@ -5,7 +5,7 @@ function quoteShell(value) {
 }
 
 export function createDockLaunchPlan({ repoRoot, nodeExecutable, profile, recovery }) {
-  const launcher = path.join(repoRoot, 'config', 'scripts', 'launch-without-openclaw.mjs')
+  const launcher = path.join(repoRoot, 'config', 'scripts', 'launch-orca-local.mjs')
   const logPath = path.join(profile, 'logs', 'source-launcher.log')
   const args = [
     '/usr/bin/nohup',

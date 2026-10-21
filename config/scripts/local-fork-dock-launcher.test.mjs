@@ -8,7 +8,7 @@ import { test } from 'node:test'
 import { promisify } from 'node:util'
 import { createDockLaunchPlan } from './local-fork-dock-launcher.mjs'
 import { installLocalDockLauncher } from './install-local-dock-launcher.mjs'
-import { defaultForkProfile, defaultRecoveryRoot } from './without-openclaw-recovery-providers.mjs'
+import { defaultForkProfile, defaultRecoveryRoot } from './local-fork-recovery-providers.mjs'
 
 const run = promisify(execFile)
 
@@ -26,7 +26,7 @@ test('Dock starts the source supervisor with the saved profile even with shell m
   const scripts = path.join(f.repoRoot, 'config', 'scripts')
   await mkdir(scripts, { recursive: true })
   await writeFile(
-    path.join(scripts, 'launch-without-openclaw.mjs'),
+    path.join(scripts, 'launch-orca-local.mjs'),
     `
     import { writeFileSync } from 'node:fs'
     writeFileSync(process.env.ORCA_DEV_USER_DATA_PATH + '/launched.json', JSON.stringify({
@@ -52,26 +52,23 @@ test('Dock starts the source supervisor with the saved profile even with shell m
   assert.deepEqual(JSON.parse(launched), {
     profile: f.profile,
     recovery: f.recovery,
-    entry: path.join(scripts, 'launch-without-openclaw.mjs')
+    entry: path.join(scripts, 'launch-orca-local.mjs')
   })
 })
 
 test('the stable default profile is independent of checkout location and supports explicit overrides', () => {
   const home = path.join(tmpdir(), 'colleague')
-  const expected = path.join(home, 'Library', 'Application Support', 'orca-without-openclaw')
+  const expected = path.join(home, 'Library', 'Application Support', 'orca-local')
   assert.equal(defaultForkProfile({}, home, 'darwin'), expected)
   assert.equal(defaultForkProfile({ ORCA_DEV_USER_DATA_PATH: expected }, home, 'darwin'), expected)
   assert.equal(
-    defaultRecoveryRoot(expected).endsWith(path.join('Orca Recovery', 'orca-without-openclaw')),
+    defaultRecoveryRoot(expected).endsWith(path.join('Orca Recovery', 'orca-local')),
     true
   )
-  assert.equal(
-    defaultForkProfile({ APPDATA: home }, home, 'win32'),
-    path.join(home, 'orca-without-openclaw')
-  )
+  assert.equal(defaultForkProfile({ APPDATA: home }, home, 'win32'), path.join(home, 'orca-local'))
   assert.equal(
     defaultForkProfile({ XDG_CONFIG_HOME: home }, home, 'linux'),
-    path.join(home, 'orca-without-openclaw')
+    path.join(home, 'orca-local')
   )
 })
 

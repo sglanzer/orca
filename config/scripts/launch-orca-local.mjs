@@ -2,10 +2,10 @@ import { existsSync, mkdirSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import path from 'node:path'
 import { prepareDevCliTerminalWrappers } from './dev-cli-terminal-wrapper.mjs'
-import { assertPreservedProfile } from './without-openclaw-profile-guard.mjs'
-import { recoverProfileIfNeeded } from './without-openclaw-recovery.mjs'
-import { defaultForkProfile, defaultRecoveryRoot } from './without-openclaw-recovery-providers.mjs'
-import { startRecoveryWatcher } from './without-openclaw-recovery-launch.mjs'
+import { assertPreservedProfile } from './local-fork-profile-guard.mjs'
+import { recoverProfileIfNeeded } from './local-fork-recovery.mjs'
+import { defaultForkProfile, defaultRecoveryRoot } from './local-fork-recovery-providers.mjs'
+import { startRecoveryWatcher } from './local-fork-recovery-launch.mjs'
 
 const root = path.resolve(import.meta.dirname, '../..')
 const require = createRequire(import.meta.url)
@@ -27,7 +27,7 @@ if (restored.recovered) {
     `[orca-recovery] Restored ${restored.summary.sessions} conversations from ${restored.from}`
   )
 }
-assertPreservedProfile(profile, path.join(root, '.tmp', 'without-openclaw-profile.json'))
+assertPreservedProfile(profile, path.join(root, '.tmp', 'orca-local-profile.json'))
 mkdirSync(profile, { recursive: true })
 const wrappers = prepareDevCliTerminalWrappers({
   repoRoot: root,
@@ -39,8 +39,8 @@ const env = {
   ORCA_DEV_USER_DATA_PATH: profile,
   ORCA_USER_DATA_PATH: profile,
   ORCA_DEV_REPO_ROOT: root,
-  ORCA_DEV_INSTANCE_LABEL: 'Without OpenClaw',
-  ORCA_DEV_DOCK_TITLE: 'Orca without OpenClaw',
+  ORCA_DEV_INSTANCE_LABEL: 'Local',
+  ORCA_DEV_DOCK_TITLE: 'Orca Local',
   PATH: [wrappers.binDir, path.dirname(process.execPath), process.env.PATH]
     .filter(Boolean)
     .join(path.delimiter)

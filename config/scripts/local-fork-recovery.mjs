@@ -13,8 +13,8 @@ import {
   syncDirectory,
   walkFiles,
   within
-} from './without-openclaw-recovery-files.mjs'
-import { providerFiles } from './without-openclaw-recovery-providers.mjs'
+} from './local-fork-recovery-files.mjs'
+import { providerFiles } from './local-fork-recovery-providers.mjs'
 
 const exists = (file) =>
   access(file).then(

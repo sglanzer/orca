@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
-import { fileDigest, snapshotFile } from './without-openclaw-recovery-files.mjs'
+import { fileDigest, snapshotFile } from './local-fork-recovery-files.mjs'
 
 async function fixture(t) {
   const root = await mkdtemp(path.join(tmpdir(), 'orca-backup-link-'))

@@ -4,16 +4,16 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { DatabaseSync } from 'node:sqlite'
 import { test } from 'node:test'
-import { inspectProfile, readJson } from './without-openclaw-recovery-files.mjs'
+import { inspectProfile, readJson } from './local-fork-recovery-files.mjs'
 import {
   createRecoverySnapshot,
   generations,
   recoverProfileIfNeeded,
   retainedGenerations,
   validateGeneration
-} from './without-openclaw-recovery.mjs'
-import { runRecoveryWatch } from './without-openclaw-recovery-watch.mjs'
-import { startRecoveryWatcher } from './without-openclaw-recovery-launch.mjs'
+} from './local-fork-recovery.mjs'
+import { runRecoveryWatch } from './local-fork-recovery-watch.mjs'
+import { startRecoveryWatcher } from './local-fork-recovery-launch.mjs'
 
 const THREAD = '01a142dd-fbf4-7892-9c08-34585161e70c'
 
@@ -268,6 +268,6 @@ test('the detached backup helper never starts an Electron instance', async (t) =
   assert.equal(pid, 123)
   assert.equal(spec.program, process.execPath)
   assert.equal(spec.detached, true)
-  assert.ok(spec.args[0].endsWith('without-openclaw-recovery-watch.mjs'))
+  assert.ok(spec.args[0].endsWith('local-fork-recovery-watch.mjs'))
   assert.equal(detached, true)
 })

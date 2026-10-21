@@ -2,9 +2,9 @@ import { mkdir, open, rename, rm, stat } from 'node:fs/promises'
 import { randomUUID } from 'node:crypto'
 import { setTimeout as delay } from 'node:timers/promises'
 import path from 'node:path'
-import { atomicJson, readJson } from './without-openclaw-recovery-files.mjs'
-import { createRecoverySnapshot, processMayBeAlive } from './without-openclaw-recovery.mjs'
-import { defaultRecoveryRoot } from './without-openclaw-recovery-providers.mjs'
+import { atomicJson, readJson } from './local-fork-recovery-files.mjs'
+import { createRecoverySnapshot, processMayBeAlive } from './local-fork-recovery.mjs'
+import { defaultRecoveryRoot } from './local-fork-recovery-providers.mjs'
 
 async function acquireWatchLock(recovery) {
   const lock = path.join(recovery, '.watch-lock')

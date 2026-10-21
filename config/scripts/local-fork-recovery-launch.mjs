@@ -9,7 +9,7 @@ export function startRecoveryWatcher({ profile, recovery, repoRoot, spawnProcess
     const watcher = spawnProcess({
       program: process.execPath,
       args: [
-        path.join(repoRoot, 'config', 'scripts', 'without-openclaw-recovery-watch.mjs'),
+        path.join(repoRoot, 'config', 'scripts', 'local-fork-recovery-watch.mjs'),
         '--profile',
         profile,
         '--recovery',

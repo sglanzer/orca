@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
-import { assertPreservedProfile } from './without-openclaw-profile-guard.mjs'
+import { assertPreservedProfile } from './local-fork-profile-guard.mjs'
 
 function fixture(t) {
   const root = mkdtempSync(path.join(tmpdir(), 'orca-profile-guard-'))

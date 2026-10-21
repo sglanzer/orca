@@ -12,7 +12,7 @@ import {
 import { homedir } from 'node:os'
 import path from 'node:path'
 import { createDockLaunchPlan } from './local-fork-dock-launcher.mjs'
-import { defaultForkProfile, defaultRecoveryRoot } from './without-openclaw-recovery-providers.mjs'
+import { defaultForkProfile, defaultRecoveryRoot } from './local-fork-recovery-providers.mjs'
 
 const marker = 'orca-source-launcher.json'
 

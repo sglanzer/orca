@@ -1,4 +1,4 @@
-# Orca without OpenClaw
+# Orca Local
 
 This fork is based on upstream `v1.4.224`. It removes OpenClaw session discovery
 on local, WSL, and SSH hosts, its state-directory environment forwarding, its
@@ -16,18 +16,18 @@ Use Node 24, pnpm, and the platform's native build tools (Xcode Command Line
 Tools on macOS). Clone the branch containing this fork and use its locked dependencies:
 
 ```sh
-git clone --single-branch --branch fix/remove-openclaw-integration \
+git clone --single-branch --branch orca-local \
   https://github.com/sglanzer/orca.git orca-local
 cd orca-local
 pnpm install --frozen-lockfile
 pnpm run build:cli
 pnpm run build:relay
 pnpm run build:electron-vite
-node config/scripts/launch-without-openclaw.mjs
+node config/scripts/launch-orca-local.mjs
 ```
 
 The launcher runs the development app from the built files, with no development
-server required. Its separate profile is named `orca-without-openclaw` under the
+server required. Its separate profile is named `orca-local` under the
 platform's application-data directory. The original Orca profile is preserved.
 Set `ORCA_DEV_USER_DATA_PATH` to select a different profile. Accounts may need
 to be connected in this profile. Development builds do not auto-update to upstream.
@@ -59,7 +59,7 @@ their values. Launch errors are written to `logs/source-launcher.log` inside the
 
 ## Settings, conversations, and recovery
 
-On macOS, the default profile is `~/Library/Application Support/orca-without-openclaw`.
+On macOS, the default profile is `~/Library/Application Support/orca-local`.
 It is outside the checkout, so restarting, pulling source changes, rebuilding, and
 refreshing the Dock launcher keep the same saved settings and conversations. The
 profile location remains stable across versions. A different profile override selects
@@ -70,7 +70,7 @@ takes verified snapshots of settings, workspace state, conversation journals, an
 supported local provider transcripts every five minutes while Orca runs, plus a final
 snapshot after it exits. The helper retries an early snapshot if startup has not yet
 created the profile databases. Backups live outside the profile, by default at
-`~/Documents/Codex/Orca Recovery/orca-without-openclaw` on macOS. It retains the latest
+`~/Documents/Codex/Orca Recovery/orca-local` on macOS. It retains the latest
 12 snapshots and recovery points for up to seven distinct days.
 
 Before launch, missing or corrupt profile data is restored from the newest verified
@@ -104,7 +104,7 @@ The launcher and recovery checks run without opening an Orca window:
 ```sh
 ORCA_BACKGROUND_LAUNCH=1 node --test \
   config/scripts/local-fork-dock-launcher.test.mjs \
-  config/scripts/without-openclaw-profile-guard.test.mjs \
-  config/scripts/without-openclaw-recovery-files.test.mjs \
-  config/scripts/without-openclaw-recovery.test.mjs
+  config/scripts/local-fork-profile-guard.test.mjs \
+  config/scripts/local-fork-recovery-files.test.mjs \
+  config/scripts/local-fork-recovery.test.mjs
 ```

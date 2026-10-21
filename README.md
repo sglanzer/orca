@@ -1,3 +1,5 @@
+> **Orca Local:** For this fork, follow [the source build and Dock launcher instructions](LOCAL-FORK.md). Its profile and automatic recovery copies use `orca-local`. The upstream download links below install upstream Orca.
+
 <h1 align="center">
   <a href="https://onOrca.dev"><img src="resources/build/icon.png" alt="Orca" width="64" valign="middle" /></a> Orca
 </h1>
