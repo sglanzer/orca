@@ -12,15 +12,12 @@ import type {
   ExternalAutomationTarget
 } from './external-automation'
 
-export const EXTERNAL_AUTOMATION_PROVIDERS = [
-  'openclaw'
-] as const satisfies readonly ExternalAutomationProvider[]
+export const EXTERNAL_AUTOMATION_PROVIDERS =
+  [] as const satisfies readonly ExternalAutomationProvider[]
 
 export function isExternalAutomationProvider(value: unknown): value is ExternalAutomationProvider {
-  return (
-    typeof value === 'string' &&
-    (EXTERNAL_AUTOMATION_PROVIDERS as readonly string[]).includes(value)
-  )
+  // Keep persisted provider identifiers readable while this fork disables their discovery and actions.
+  return value === 'openclaw'
 }
 
 export const EXTERNAL_AUTOMATION_SCOPE_CODES = {

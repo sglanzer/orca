@@ -1,3 +1,4 @@
+import { installMergedSessionSourceFixture } from './session-search-merged-source-fixture'
 import '../worker/session-search-worker.test-fixture'
 import { chmod, rm } from 'node:fs/promises'
 import { delimiter, join } from 'node:path'
@@ -14,6 +15,8 @@ import {
 } from './session-search-indexer-test-fixture'
 
 // Use constituent OpenClaw roots; joined discovery labels cannot be split because paths may contain delimiters.
+
+installMergedSessionSourceFixture()
 
 const CAN_DENY_READ = process.platform !== 'win32' && process.getuid?.() !== 0
 const INTERVAL_MS = 20_000

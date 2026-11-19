@@ -25,7 +25,6 @@ export const AI_VAULT_DELETABLE_AGENTS = [
   'copilot',
   'cursor',
   'devin',
-  'openclaw',
   'droid',
   'pi',
   'omp',
