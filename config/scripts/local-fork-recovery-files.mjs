@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { createReadStream, readFileSync } from 'node:fs'
+import { createReadStream, existsSync, readFileSync } from 'node:fs'
 import {
   chmod,
   copyFile,
@@ -211,12 +211,17 @@ export function inspectProfile(profile) {
     )
   }
   const journal = path.join(profile, 'agent-session-journal.db')
-  checkDatabase(journal)
+  const hasJournal = existsSync(journal)
+  if (hasJournal) {
+    checkDatabase(journal)
+  }
   checkDatabase(path.join(profile, 'orchestration.db'))
-  const sessions = queryDatabase(
-    journal,
-    (db) => db.prepare('SELECT count(*) AS n FROM agent_session_records').get().n
-  )
+  const sessions = hasJournal
+    ? queryDatabase(
+        journal,
+        (db) => db.prepare('SELECT count(*) AS n FROM agent_session_records').get().n
+      )
+    : 0
   if (!readFileSync(path.join(profile, 'agent-session-authority.key')).length) {
     throw new Error('The journal authority key is missing')
   }
