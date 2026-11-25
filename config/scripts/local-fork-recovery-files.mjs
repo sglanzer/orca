@@ -212,7 +212,9 @@ export function inspectProfile(profile) {
   }
   const journal = path.join(profile, 'agent-session-journal.db')
   const hasJournal = existsSync(journal)
-  if (hasJournal) checkDatabase(journal)
+  if (hasJournal) {
+    checkDatabase(journal)
+  }
   checkDatabase(path.join(profile, 'orchestration.db'))
   const sessions = hasJournal
     ? queryDatabase(
